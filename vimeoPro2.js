@@ -5,7 +5,7 @@ $(function() {
         playerID,
         scrollTimer
 
-
+    //create array of all standard-embedded videos on page
     for (let i of iframe$) {
         let url = i.src
         if (url.includes('vimeo')) {
@@ -14,49 +14,22 @@ $(function() {
         }
     }
 
+
     $(function() {
         initialize().promise().done(scrollAction())
     })
 
-    function scrollAction() {
-        $(window).scroll(function() {
-            if (scrollTimer) {
-                clearTimeout(scrollTimer)
-            }
-            scrollTimer = setTimeout(handleScroll, 500)
 
-            function handleScroll() {
-                $.each(video$, function(i) {
-                    if ($(this.element).isInView()) {
-                        console.log($(this)[0], 'hi')
-                        autoPlay($(this)[0])
-                    }else{
-                        console.log($(this)[0], 'bye')
-                        pause($(this)[0])
-                    }
-                })
-            }
-
-            $.fn.isInView = function() {
-                let thisOffset = $(this).offset().top;
-                let windowHeight = $(window).height();
-                let heightToThis = thisOffset - windowHeight;
-                let scrollPosition = $(window).scrollTop();
-                if ((scrollPosition >= heightToThis)) {
-                    return true;
-                }
-            }
-
-        })
-    }
-
-
+    //convert all standard-embedded videos to API player
     function initialize() {
         return $.each($('.vimeo'), function(video) {
             newPlayer($(this))
         })
 
     }
+
+
+    //give each new player object a unique ID (their Vimeo ID), set default document.ready options
 
     function newPlayer(i) {
         i = new Vimeo.Player(i)
@@ -144,5 +117,54 @@ $(function() {
         }).catch(function(error) {})
         return playerID
     }
+
+    function scrollAction() {
+        $(window).scroll(function() {
+            if (scrollTimer) {
+                clearTimeout(scrollTimer)
+            }
+            scrollTimer = setTimeout(handleScroll, 500)
+
+            function handleScroll() {
+                $.each(video$, function(i) {
+                    console.log(this)
+                    console.log($(this)[0])
+                    console.log($(this.element))
+
+                    if ($(this.element).isScrolledIntoView()) {
+                        // console.log('hi')
+                        console.log($(this)[0], 'hi')
+                        autoPlay($(this)[0])
+
+                    }else{
+                        // console.log('bye')
+                        console.log($(this)[0], 'bye')
+                        pause($(this)[0])
+                    }
+                })
+            }
+
+            $.fn.isScrolledIntoView = function() {
+                let thisOffset = $(this).offset().top;
+                let windowHeight = $(window).height();
+
+                let heightToThis = thisOffset - windowHeight;
+
+                let scrollPosition = $(window).scrollTop();
+
+                if ((scrollPosition >= heightToThis)) {
+                    return true;
+                }
+            }
+
+
+
+
+
+        })
+    }
+
+
+
 
 })
