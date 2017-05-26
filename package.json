@@ -1,0 +1,22 @@
+{
+  "name": "csm_site_052017",
+  "version": "1.0.0",
+  "description": "",
+  "main": "vimeoPro.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/willmeierart/CSM_autoplay.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/willmeierart/CSM_autoplay/issues"
+  },
+  "homepage": "https://github.com/willmeierart/CSM_autoplay#readme",
+  "dependencies": {
+    "iphone-inline-video": "^2.0.2"
+  }
+}

@@ -1,9 +1,12 @@
 $(function() {
 
+//make all videos initialize then enable scroll functionality
     $(function() {
         initialize().promise().done(scrollAction())
     })
 
+
+//create new vimeo player objects with autoplay presets out of embedded videos
     let iframe$ = $('iframe'),
         video$ = []
 
@@ -16,7 +19,7 @@ $(function() {
 
     function initialize() {
         return $.each($('.vimeo'), function(video) {
-            newPlayer($(this))
+            video$.push(newPlayer($(this)))
         })
     }
 
@@ -24,8 +27,7 @@ $(function() {
         player = new Vimeo.Player(player)
         giveUniqueID(player)
         initPresets(player)
-        video$.push(player)
-        return video$
+        return player
     }
 
     function initPresets(player) {
@@ -99,9 +101,12 @@ $(function() {
     function giveUniqueID(player) {
         player.getVideoId().then(function(id) {
             player.element.id = id
+            player.element.attr('playsinline', true)
         }).catch(function(error) {})
     }
 
+
+//when window is scrolled, delay action but then if video is in view play it
     function scrollAction() {
         let scrollTimer
         $(window).scroll(function() {
@@ -126,9 +131,10 @@ $(function() {
 
             function isInView(video) {
                 let bounds = video.getBoundingClientRect()
+                console.log(bounds)
                 return (
-                    bounds.top >= 0 &&
-                    bounds.bottom <= (window.innerHeight || document.documentElement.clientHeight)
+                    bounds.top >= -100 &&
+                    bounds.bottom <= (window.innerHeight || document.documentElement.clientHeight)+100
                 )
             }
 
