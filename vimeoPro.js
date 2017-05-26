@@ -1,10 +1,14 @@
 $(function() {
+
+    $(function() {
+        initialize().promise().done(scrollAction())
+    })
+
     let
         iframe$ = $('iframe'),
         video$ = [],
         playerID,
         scrollTimer
-
 
     for (let i of iframe$) {
         let url = i.src
@@ -12,42 +16,6 @@ $(function() {
             i.classList.add('vimeo')
 
         }
-    }
-
-    $(function() {
-        initialize().promise().done(scrollAction())
-    })
-
-    function scrollAction() {
-        $(window).scroll(function() {
-            if (scrollTimer) {
-                clearTimeout(scrollTimer)
-            }
-            scrollTimer = setTimeout(handleScroll, 500)
-
-            function handleScroll() {
-                $.each(video$, function(i) {
-                    if ($(this.element).isInView()) {
-                        console.log($(this)[0], 'hi')
-                        autoPlay($(this)[0])
-                    }else{
-                        console.log($(this)[0], 'bye')
-                        pause($(this)[0])
-                    }
-                })
-            }
-
-            $.fn.isInView = function() {
-                let thisOffset = $(this).offset().top;
-                let windowHeight = $(window).height();
-                let heightToThis = thisOffset - windowHeight;
-                let scrollPosition = $(window).scrollTop();
-                if ((scrollPosition >= heightToThis)) {
-                    return true;
-                }
-            }
-
-        })
     }
 
 
@@ -143,6 +111,37 @@ $(function() {
             player.classList.add('tryIt')
         }).catch(function(error) {})
         return playerID
+    }
+
+    function scrollAction() {
+        $(window).scroll(function() {
+            if (scrollTimer) {
+                clearTimeout(scrollTimer)
+            }
+            scrollTimer = setTimeout(handleScroll, 500)
+
+            function handleScroll() {
+                $.each(video$, function(i) {
+                    if (isInView($(this.element)[0])) {
+                        console.log($(this)[0], 'hi')
+                        autoPlay($(this)[0])
+                    }else{
+                        console.log($(this)[0], 'bye')
+                        pause($(this)[0])
+                    }
+                })
+            }
+
+            function isInView(video) {
+                console.log(video)
+                let bounds = video.getBoundingClientRect()
+                return (
+                    bounds.top >= 0 &&
+                    bounds.bottom <= (window.innerHeight || document.documentElement.clientHeight)
+                )
+            }
+
+        })
     }
 
 })
