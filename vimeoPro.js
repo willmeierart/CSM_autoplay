@@ -4,14 +4,14 @@ $(function() {
 
 //make all videos initialize then enable scroll functionality
     $(function() {
-        if (isMobile === false){
+        if (isMobile() == false){
             initialize().promise().done(scrollAction())
-        }    
+        }
     })
 
 //...if not on mobile
     function isMobile() {
-        return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1)
+        return (typeof window.orientation !== 'undefined') || (navigator.userAgent.indexOf('IEMobile') !== -1)
     }
 
 //create new vimeo player objects with autoplay presets out of embedded videos
